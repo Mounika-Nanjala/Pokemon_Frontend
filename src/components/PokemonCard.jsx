@@ -7,6 +7,7 @@ const PokemonCard = ({ id, name, url }) => {
   const navigate = useNavigate();
 
   const onView = () => {
+    console.log("View-->pokemon id:", id);
     navigate(`/pokemon/${id}`);
   };
 
@@ -23,7 +24,7 @@ const PokemonCard = ({ id, name, url }) => {
         <div className="absolute bottom-4 right-4 flex items-center gap-4">
           <button
             className="text-yellow-500 hover:text-yellow-700"
-            onClick={() => onView}
+            onClick={onView}
           >
             <FaRegEye size={20} />
           </button>
