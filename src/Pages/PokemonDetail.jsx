@@ -10,25 +10,31 @@ const PokemonDetail = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [form, setForm] = useState({
+    name: "",
+    height: "",
+    weight: "",
+    types: "",
+    abilities: "",
+    sprite: "",
+  });
 
   useEffect(() => {
     const fetchPokemon = async () => {
-      console.log("use effect id:", id);
-
-      if (!id) {
-        setError("No Pokemon ID provided.");
-        setLoading(false);
-        return;
-      }
-
       try {
         const pokemonData = await getPokemon(id);
-        console.log("Pokemon data:", pokemonData);
-
         if (!pokemonData) {
           setError(`Pokémon with ID ${id} not found.`);
         } else {
           setData(pokemonData);
+          setForm({
+            name: pokemonData.name,
+            height: pokemonData.height,
+            weight: pokemonData.weight,
+            types: pokemonData.types.join(", "),
+            abilities: pokemonData.abilities.join(", "),
+            sprite: pokemonData.sprite,
+          });
         }
       } catch (error) {
         setError(error.message);
@@ -38,6 +44,10 @@ const PokemonDetail = () => {
     };
     fetchPokemon();
   }, [id]);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,7 +65,7 @@ const PokemonDetail = () => {
   if (!data) return <p className="text-white text-center">No Pokémon found.</p>;
   console.log("data:", data.name, data.height, data.weight);
   return (
-    <div className="flex flex-col bg-gray-900 text-white min-h-screen">
+    <div className="flex flex-col bg-gray-900 text-black min-h-screen">
       <section className="items-center flex flex-col px-4 py-10">
         <div className="border border-light textLight rounded-xl w-full max-w-lg md:max-w-xl lg:max-w-2xl p-5 bg-bgLight">
           <form
@@ -64,8 +74,9 @@ const PokemonDetail = () => {
             className="items-center flex flex-col px-4 pb-8 gap-5"
           >
             <label className="input-custom gap-2 w-full">
+              <span className="text-gray-300">Name:</span>
               <input
-                defaultValue={data.name}
+                value={data?.name || ""}
                 name="name"
                 className="grow w-full"
                 placeholder="Name"
@@ -73,16 +84,18 @@ const PokemonDetail = () => {
               />
             </label>
             <label className="input-custom gap-2 w-full">
+              <span className="text-gray-300">Height:</span>
               <input
-                defaultValue={String(data.height)}
+                value={data?.height || ""}
                 name="height"
                 className="grow w-full"
                 readOnly
               />
             </label>
             <label className="input-custom gap-2 w-full">
+              <span className="text-gray-300">Weight:</span>
               <input
-                defaultValue={String(data.weight)}
+                defaultValue={data?.weight || ""}
                 name="weight"
                 className="grow w-full"
                 readOnly
@@ -90,16 +103,18 @@ const PokemonDetail = () => {
             </label>
 
             <label className="textarea-custom gap-2 w-full">
+              <span className="text-gray-300">Types:</span>
               <textarea
-                defaultValue={data.types.join(", ")}
+                defaultValue={data?.types.join(", ") || ""}
                 name="types"
                 className="grow w-full bg-bgInput h-full"
                 readOnly
               />
             </label>
             <label className="textarea-custom gap-2 w-full">
+              <span className="text-gray-300">Abilities:</span>
               <textarea
-                defaultValue={data.abilities.join(", ")}
+                defaultValue={data?.abilities.join(", ") || ""}
                 name="abilities"
                 className="grow w-full bg-bgInput h-full"
                 readOnly
