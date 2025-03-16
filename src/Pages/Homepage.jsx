@@ -20,7 +20,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col text-white min-h-screen">
+    <div className="flex flex-col bg-gray-900 text-white min-h-screen">
       <main className="flex-grow container mx-auto p-4">
         <Pokemons data={data} />
       </main>
