@@ -11,7 +11,7 @@ const HomePage = () => {
       try {
         const pokemonData = await fetchAllPokemons();
         console.log("Fetched pokemons:", pokemonData);
-        setData(pokemonData.data);
+        setData(pokemonData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

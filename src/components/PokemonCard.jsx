@@ -2,11 +2,11 @@ import { useNavigate } from "react-router";
 import { FaPencilAlt } from "react-icons/fa";
 import { FaRegTrashAlt } from "react-icons/fa";
 
-const PokemonCard = ({ itemKey, name, url }) => {
+const PokemonCard = ({ id, name, url }) => {
   const navigate = useNavigate();
 
-  const onView = (itemKey) => {
-    navigate(`/pokemon/${itemKey}`);
+  const onView = () => {
+    navigate(`/pokemon/${id}`);
   };
 
   return (
@@ -22,7 +22,7 @@ const PokemonCard = ({ itemKey, name, url }) => {
         <div className="absolute bottom-4 right-4 flex items-center gap-4">
           <button
             className="text-gray-600 hover:text-gray-800"
-            onClick={() => onView(itemKey)}
+            onClick={() => onView}
           >
             <FaPencilAlt size={20} />
           </button>

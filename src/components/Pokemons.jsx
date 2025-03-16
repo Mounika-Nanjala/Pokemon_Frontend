@@ -11,8 +11,6 @@ const Pokemons = ({ data }) => {
   useEffect(() => {
     if (Array.isArray(data)) {
       setCards(data);
-    } else if (Array.isArray(data?.data)) {
-      setCards(data.data);
     } else {
       setCards([]);
     }
@@ -33,6 +31,7 @@ const Pokemons = ({ data }) => {
         {cards.map((item) => (
           <PokemonCard
             key={item.id}
+            id={item.id}
             name={item.name}
             url={item.imageUrl}
             onEdit={() => onEdit(item.id)}
