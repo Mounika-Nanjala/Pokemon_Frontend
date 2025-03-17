@@ -1,12 +1,14 @@
-import { getPokemon, addToList } from "../services/pokemonApi.js";
-import { useContext, useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
-import { useNavigate, useParams } from "react-router";
+import { getPokemon } from "../services/pokemonApi.js";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router";
+import { useNavigate } from "react-router";
 
 const PokemonDetail = () => {
   const { id } = useParams();
   console.log("Detail page:", id);
+  const navigate = useNavigate();
 
+  const [roster, setRoster] = useState([]);
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -45,22 +47,37 @@ const PokemonDetail = () => {
     fetchPokemon();
   }, [id]);
 
-  const handleSubmit = async (e) => {
+  const addToRoster = (pokemon) => {
+    if (!pokemon || !pokemon.name) return;
+    const existingPokemon = localStorage.getItem(pokemon.name);
+
+    if (existingPokemon) {
+      alert(`${pokemon.name} is already in the roster!`);
+      return;
+    }
+
+    localStorage.setItem(pokemon.name, JSON.stringify(pokemon));
+    setRoster((prevRoster) => [...prevRoster, pokemon]);
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!id) {
       alert("Error: No pokemon ID found.");
       return;
     }
+
     try {
-      await addToList();
-      if (!response.ok) throw new Error("Failed to add a pokemon to the list");
+      addToRoster(data);
       alert(`${data.name} added to the roster!`);
+      navigate("/roster");
     } catch (error) {
       console.error(error);
-      alert("Error adding Pokémon.");
+      alert("Error by adding a pokemon.");
     }
   };
+
   if (loading)
     return <p className="text-white text-center">Loading Pokémon...</p>;
   if (error) return <p className="text-red-500 text-center">{error}</p>;
