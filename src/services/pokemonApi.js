@@ -45,3 +45,18 @@ export const getPokemon = async (id) => {
     return null;
   }
 };
+//TODO: probably the path must be changed ???
+export const addToList = async () => {
+  await fetch("http://localhost:5000/api/roster", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: data.name,
+      height: data.height,
+      weight: data.weight,
+      types: data.types,
+      abilities: data.abilities,
+      sprite: data.sprite,
+    }),
+  });
+};

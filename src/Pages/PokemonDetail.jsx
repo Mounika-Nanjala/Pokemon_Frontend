@@ -1,4 +1,4 @@
-import { getPokemon } from "../services/pokemonApi.js";
+import { getPokemon, addToList } from "../services/pokemonApi.js";
 import { useContext, useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { useNavigate, useParams } from "react-router";
@@ -45,19 +45,21 @@ const PokemonDetail = () => {
     fetchPokemon();
   }, [id]);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!id) {
       alert("Error: No pokemon ID found.");
       return;
     }
-    //TODO: add to Mongo DB
-    alert("Pokemon added to the list!");
+    try {
+      await addToList();
+      if (!response.ok) throw new Error("Failed to add a pokemon to the list");
+      alert(`${data.name} added to the roster!`);
+    } catch (error) {
+      console.error(error);
+      alert("Error adding Pokémon.");
+    }
   };
   if (loading)
     return <p className="text-white text-center">Loading Pokémon...</p>;
