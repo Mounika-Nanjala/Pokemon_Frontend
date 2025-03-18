@@ -49,9 +49,13 @@ export const getPokemon = async (id) => {
 export const fetchRandomPokemon = async () => {
   try {
     const randomId = Math.floor(Math.random() * 898) + 1; // Random ID between 1 and 898 (current # of Pokémon)
-    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
+    const response = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${randomId}`
+    );
     if (!response.ok) {
-      console.warn(`Pokemon with ID ${randomId} not found (Status: ${response.status})`);
+      console.warn(
+        `Pokemon with ID ${randomId} not found (Status: ${response.status})`
+      );
       return null;
     }
     const data = await response.json();
@@ -84,4 +88,29 @@ export const addToList = async () => {
       sprite: data.sprite,
     }),
   });
+};
+
+export const getPokemonStats = async (pokemonName) => {
+  try {
+    const response = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
+    );
+    const data = await response.json();
+    const stats = data.stats
+      .filter(
+        (stat) =>
+          stat.stat.name !== "special-attack" &&
+          stat.stat.name !== "special-defense" &&
+          stat.stat.name !== "speed"
+      )
+      .map((stat) => ({
+        name: stat.stat.name,
+        value: stat.base_stat,
+      }));
+
+    console.log(stats);
+    return stats;
+  } catch (error) {
+    console.error("Error fetching pokemon stats:", error);
+  }
 };

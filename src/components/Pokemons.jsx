@@ -34,6 +34,7 @@ const Pokemons = ({ data }) => {
             id={item.id}
             name={item.name}
             url={item.imageUrl}
+            stats={item.stats || []}
             onEdit={() => onEdit(item.id)}
           />
         ))}
