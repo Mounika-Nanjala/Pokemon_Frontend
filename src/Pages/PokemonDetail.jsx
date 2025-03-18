@@ -71,7 +71,7 @@ const PokemonDetail = () => {
     try {
       addToRoster(data);
       alert(`${data.name} added to the roster!`);
-      navigate("/roster");
+      navigate("/my-roster");
     } catch (error) {
       console.error(error);
       alert("Error by adding a pokemon.");
