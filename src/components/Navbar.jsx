@@ -31,7 +31,7 @@ export default function Navbar() {
                     </li>
                     <li>
                         <Link
-                            to="/roster"
+                            to="/my-roster"
                             className="block p-2 hover:text-gray-400">
                             My Roster
                         </Link>

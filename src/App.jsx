@@ -1,7 +1,7 @@
 // import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
 import MainLayout from "./layouts/MainLayout";
-import HomePage from "./Pages/HomePage";
+import HomePage from "./Pages/Homepage";
 import PokemonDetail from "./Pages/PokemonDetail";
 import MyRoster from "./Pages/MyRoster";
 import Battle from "./Pages/Battle";
