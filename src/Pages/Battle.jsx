@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchRandomPokemon } from "../services/pokemonApi";
+import { fetchRandomPokemon, getLastBattlefieldKey } from "../services/utils";
 import { useNavigate } from "react-router";
 
 const BattlePage = () => {
@@ -15,15 +15,18 @@ const BattlePage = () => {
         const enemyData = await fetchRandomPokemon();
         setEnemyPokemon(enemyData);
 
-        // Get a random Pokémon from the player's roster 
-        const savedRoster = JSON.parse(localStorage.getItem("roster")) || [];
-        if (savedRoster.length > 0) {
-          const randomPlayerPokemon =
-            savedRoster[Math.floor(Math.random() * savedRoster.length)];
-          setPlayerPokemon(randomPlayerPokemon);
-        } else {
+        const lastNumber = getLastBattlefieldKey();
+        if (lastNumber === 0) {
           alert("No Pokémon in roster! Add some first.");
           navigate("/my-roster");
+        } else {
+          const lastBattlefieldKey = `battlefield${lastNumber}`;
+          const savedRoster = JSON.parse(
+            localStorage.getItem(lastBattlefieldKey)
+          );
+          console.log("battle:", savedRoster);
+          console.log("random player id:", savedRoster.id);
+          setPlayerPokemon(savedRoster);
         }
       } catch (error) {
         console.error("Error fetching Pokémon:", error);
@@ -57,14 +60,22 @@ const BattlePage = () => {
           {/* Player's Pokémon */}
           <div className="text-center border p-4 rounded-lg">
             <h2 className="text-xl">{playerPokemon.name}</h2>
-            <img src={playerPokemon.sprite} alt={playerPokemon.name} className="w-32 mx-auto" />
+            <img
+              src={playerPokemon.sprite}
+              alt={playerPokemon.name}
+              className="w-32 mx-auto"
+            />
             <p>Attack: {playerPokemon.stats.attack}</p>
           </div>
 
           {/* Enemy Pokémon */}
           <div className="text-center border p-4 rounded-lg">
             <h2 className="text-xl">{enemyPokemon.name}</h2>
-            <img src={enemyPokemon.sprite} alt={enemyPokemon.name} className="w-32 mx-auto" />
+            <img
+              src={enemyPokemon.sprite}
+              alt={enemyPokemon.name}
+              className="w-32 mx-auto"
+            />
             <p>Attack: {enemyPokemon.stats.attack}</p>
           </div>
         </div>

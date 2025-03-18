@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaCaretDown } from "react-icons/fa";
+import { useNavigate } from "react-router";
+import { getLastBattlefieldKey } from "../services/utils";
 
 const MyRoster = () => {
   const [roster, setRoster] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const storedRoster = [];
 
@@ -12,7 +14,12 @@ const MyRoster = () => {
       const item = localStorage.getItem(key);
 
       // Check if the item is a valid JSON string
-      if (item && item.startsWith("{") && item.endsWith("}")) {
+      if (
+        item &&
+        !key.includes("battlefield") &&
+        item.startsWith("{") &&
+        item.endsWith("}")
+      ) {
         try {
           const pokemonData = JSON.parse(item);
           if (pokemonData && pokemonData.name) {
@@ -44,6 +51,19 @@ const MyRoster = () => {
       alert("Error deleting the Pokémon.");
     }
   };
+
+  const handleSelect = (pokemon) => {
+    try {
+      const lastNumber = getLastBattlefieldKey();
+      const nextKey = `battlefield${lastNumber + 1}`;
+      localStorage.setItem(nextKey, JSON.stringify(pokemon));
+      navigate("/battle");
+    } catch (error) {
+      console.error(error);
+      alert("Error by selecting a pokemon.");
+    }
+  };
+
   return (
     <div className="text-white">
       <h2 className="text-center text-2xl mb-4">Pokémon Roster</h2>
@@ -63,9 +83,20 @@ const MyRoster = () => {
                 alt={pokemon.name}
                 className="w-24 h-24 mt-2"
               />
-              <button onClick={() => handleDelete(pokemon.name)}>
-                <FaTrash /> Delete
-              </button>
+              <div className="flex gap-2 mt-2">
+                <button
+                  className="text-red-500 hover:text-red-700"
+                  onClick={() => handleDelete(pokemon.name)}
+                >
+                  <FaTrash className="inline-block" /> Delete
+                </button>
+                <button
+                  className="text-green-500 hover:text-green-700"
+                  onClick={() => handleSelect(pokemon)}
+                >
+                  <FaCaretDown className="inline-block" /> Select
+                </button>
+              </div>
             </li>
           ))}
         </ul>

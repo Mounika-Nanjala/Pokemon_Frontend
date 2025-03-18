@@ -4,3 +4,11 @@ export const fetchRandomPokemon = async () => {
   const data = await response.json();
   console.log(data);
 };
+
+export const getLastBattlefieldKey = () => {
+  const battlefieldKeys = Object.keys(localStorage)
+    .filter((key) => key.startsWith("battlefield"))
+    .map((key) => parseInt(key.replace("battlefield", ""), 10));
+
+  return battlefieldKeys.length > 0 ? Math.max(...battlefieldKeys) : 0;
+};
