@@ -5,21 +5,12 @@ import { useNavigate } from "react-router";
 
 const PokemonDetail = () => {
   const { id } = useParams();
-  console.log("Detail page:", id);
   const navigate = useNavigate();
 
   const [roster, setRoster] = useState([]);
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState({
-    name: "",
-    height: "",
-    weight: "",
-    types: "",
-    abilities: "",
-    sprite: "",
-  });
 
   useEffect(() => {
     const fetchPokemon = async () => {
@@ -29,14 +20,6 @@ const PokemonDetail = () => {
           setError(`Pokémon with ID ${id} not found.`);
         } else {
           setData(pokemonData);
-          setForm({
-            name: pokemonData.name,
-            height: pokemonData.height,
-            weight: pokemonData.weight,
-            types: pokemonData.types.join(", "),
-            abilities: pokemonData.abilities.join(", "),
-            sprite: pokemonData.sprite,
-          });
         }
       } catch (error) {
         setError(error.message);
@@ -47,42 +30,49 @@ const PokemonDetail = () => {
     fetchPokemon();
   }, [id]);
 
+  const showToast = (message) => {
+   
+    console.log("Toast:", message); 
+  };
+
   const addToRoster = (pokemon) => {
     if (!pokemon || !pokemon.name) return;
     const existingPokemon = localStorage.getItem(pokemon.name);
 
     if (existingPokemon) {
-      alert(`${pokemon.name} is already in the roster!`);
+      showToast(`${pokemon.name} is already in the roster!`);
       return;
     }
 
     localStorage.setItem(pokemon.name, JSON.stringify(pokemon));
     setRoster((prevRoster) => [...prevRoster, pokemon]);
+    showToast(`${pokemon.name} added to the roster!`);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!id) {
-      alert("Error: No pokemon ID found.");
+      showToast("Error: No Pokémon ID found.");
       return;
     }
 
     try {
       addToRoster(data);
-      alert(`${data.name} added to the roster!`);
       navigate("/my-roster");
     } catch (error) {
       console.error(error);
-      alert("Error by adding a pokemon.");
+      showToast("Error adding the Pokémon.");
     }
   };
+
+  const isAlreadyInRoster = data && !!localStorage.getItem(data.name);
 
   if (loading)
     return <p className="text-white text-center">Loading Pokémon...</p>;
   if (error) return <p className="text-red-500 text-center">{error}</p>;
   if (!data) return <p className="text-white text-center">No Pokémon found.</p>;
-  console.log("data:", data.name, data.height, data.weight);
+
   return (
     <div className="flex flex-col bg-gray-900 text-black min-h-screen">
       <section className="items-center flex flex-col px-4 py-10">
@@ -120,7 +110,6 @@ const PokemonDetail = () => {
                 readOnly
               />
             </label>
-
             <label className="textarea-custom gap-2 w-full">
               <span className="text-gray-300">Types:</span>
               <textarea
@@ -142,13 +131,15 @@ const PokemonDetail = () => {
             <div className="w-full flex justify-center">
               <img src={data.sprite} alt={data.name} className="w-32 h-32" />{" "}
             </div>
-
             <button
               id="submit-btn"
               type="submit"
-              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 rounded-lg transition"
+              className={`bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 rounded-lg transition ${
+                isAlreadyInRoster ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={isAlreadyInRoster}
             >
-              Add
+              {isAlreadyInRoster ? "Already in Roster" : "Add"}
             </button>
           </form>
         </div>
