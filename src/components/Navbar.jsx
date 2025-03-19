@@ -29,7 +29,7 @@ export default function Navbar() {
                     Pokémon Battle
                 </Link>
 
-                {/* Navigation + Theme Toggle immer sichtbar */}
+                {/* Navigation + Theme Toggle  */}
                 <div className="flex items-center gap-6">
                     {/* Navigation Links */}
                     <ul className="hidden md:flex gap-6">
@@ -48,7 +48,7 @@ export default function Navbar() {
                         ))}
                     </ul>
 
-                    {/* Dark Mode Toggle (immer sichtbar) */}
+                    {/* Dark Mode Toggle */}
                     <label className="swap swap-rotate cursor-pointer flex items-center">
                         <input
                             type="checkbox"
@@ -79,7 +79,7 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile Menü (Dropdown) */}
+            {/* Mobile Menu (Dropdown) */}
             {isOpen && (
                 <ul
                     id="nav-menu"

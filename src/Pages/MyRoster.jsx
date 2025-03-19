@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaTrash, FaCaretDown } from "react-icons/fa";
 import { useNavigate } from "react-router";
-import { getLastBattlefieldKey } from "../services/utils";
+// import { getLastBattlefieldKey } from "../services/utils";
 import { GiBroadsword, GiShield, GiHeartPlus } from "react-icons/gi";
 import { Trash2, Zap } from "lucide-react";
 
@@ -59,17 +59,14 @@ const MyRoster = () => {
 
     const handleSelect = (pokemon) => {
         try {
-            const lastNumber = getLastBattlefieldKey();
-            const nextKey = `battlefield${lastNumber + 1}`;
-            localStorage.setItem(nextKey, JSON.stringify(pokemon));
+            localStorage.setItem("selectedPokemon", JSON.stringify(pokemon));
             navigate("/battle");
         } catch (error) {
             console.error(error);
-            alert("Error by selecting a Pokémon.");
+            alert("Error selecting the Pokémon.");
         }
     };
 
-    // 🛠️ Funktionen für Icons & Farben der Stats
     const getStatIcon = (stat) => {
         switch (stat) {
             case "hp":
@@ -116,7 +113,7 @@ const MyRoster = () => {
                         <div
                             key={index}
                             className="p-6 border border-gray-500 bg-pokemon-cardLight dark:bg-pokemon-cardDark rounded-xl shadow-md text-center">
-                            {/* Pokémon Bild */}
+                            {/* Pokémon image */}
                             <div className="flex justify-center">
                                 <img
                                     src={pokemon.sprite}
@@ -130,7 +127,7 @@ const MyRoster = () => {
                                 {pokemon.name}
                             </h2>
 
-                            {/* Grundlegende Infos */}
+                            {/* Basic information */}
                             <div className="mt-4 space-y-2 text-center">
                                 <p>
                                     <span className="font-semibold">
@@ -156,9 +153,9 @@ const MyRoster = () => {
                                 </p>
                             </div>
 
-                            {/* Stats (Nur HP, Attack, Defense) */}
+                            {/* Stats (HP, Attack, Defense) */}
                             <div className="mt-4 space-y-3">
-                                {(pokemon.stats || []) // Falls `stats` undefined ist, wird ein leeres Array genommen
+                                {(pokemon.stats || [])
                                     .filter((stat) =>
                                         ["hp", "attack", "defense"].includes(
                                             stat.name
@@ -168,7 +165,7 @@ const MyRoster = () => {
                                         <div
                                             key={stat.name}
                                             className="flex items-center gap-2">
-                                            {/* Label mit Icon */}
+                                            {/* Label with Icon */}
                                             <span className="text-sm font-semibold flex items-center gap-1 w-24">
                                                 {getStatIcon(stat.name)}{" "}
                                                 {stat.name.toUpperCase()}
@@ -188,7 +185,7 @@ const MyRoster = () => {
                                                     }}></div>
                                             </div>
 
-                                            {/* Wert */}
+                                            {/* Value */}
                                             <span className="text-sm font-semibold w-8 text-right">
                                                 {stat.value}
                                             </span>

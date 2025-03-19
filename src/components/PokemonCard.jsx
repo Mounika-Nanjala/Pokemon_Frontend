@@ -41,7 +41,7 @@ const PokemonCard = ({ id, name, url, stats }) => {
 
     return (
         <div className="relative rounded-xl p-6 border border-gray-600 dark:border-gray-700 flex flex-col items-center gap-4 shadow-md hover:shadow-lg transition-all duration-300">
-            {/* Pokémon Bild mit sanftem Bounce-Effekt */}
+            {/* Pokémon image */}
             <div className="w-32 h-32 animate-subtleBounce">
                 <img
                     src={url}
@@ -68,7 +68,7 @@ const PokemonCard = ({ id, name, url, stats }) => {
                             <span className="text-sm font-semibold w-20 flex items-center gap-1">
                                 {icon} {label}
                             </span>
-                            {/* Progress Bar (gleich lange Balken) */}
+                            {/* Progress Bar */}
                             <div className="relative flex-1 h-3 bg-gray-700 rounded-lg overflow-hidden">
                                 <div
                                     className={`absolute left-0 h-full rounded-lg ${color} transition-all duration-300`}
@@ -76,7 +76,7 @@ const PokemonCard = ({ id, name, url, stats }) => {
                                         width: `${(stat.value / 150) * 100}%`,
                                     }}></div>
                             </div>
-                            {/* Zahl */}
+                            {/* Number */}
                             <span className="text-sm font-semibold w-8 text-right">
                                 {stat.value}
                             </span>
@@ -85,7 +85,7 @@ const PokemonCard = ({ id, name, url, stats }) => {
                 })}
             </div>
 
-            {/* View Button mit nur dem Auge */}
+            {/* View Button  */}
             <button
                 className="bg-transparent border border-yellow-500 text-yellow-500 rounded-full p-3 transition-all duration-300 hover:bg-yellow-500 hover:text-black"
                 onClick={onView}

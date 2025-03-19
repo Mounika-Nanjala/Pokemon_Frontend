@@ -50,12 +50,11 @@ const HomePage = () => {
 
     return (
         <div className="container mx-auto p-4 text-center">
-            {/* Headline mit Glow-Effekt */}
+            {/* Headline */}
             <h1 className="text-4xl font-bold text-pokemon-accent drop-shadow-lg">
                 Welcome to Pokémon Battle!
             </h1>
 
-            {/* Kurze Beschreibung */}
             <p className="text-lg  text-black dark:text-white mt-2">
                 Choose your Pokémon, build your roster, and battle against
                 others to climb the leaderboard!

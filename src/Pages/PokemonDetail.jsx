@@ -9,7 +9,7 @@ import {
     Plus,
 } from "lucide-react";
 
-const MAX_POKEMON = 898; // Maximale Anzahl an Pokémon
+const MAX_POKEMON = 150;
 
 const PokemonDetail = () => {
     const { id } = useParams();
@@ -29,7 +29,7 @@ const PokemonDetail = () => {
                 } else {
                     setData(pokemonData);
 
-                    // ✅ Namen des vorherigen und nächsten Pokémon abrufen
+                    // Prev and next name
                     if (id > 1) {
                         const prevData = await getPokemon(Number(id) - 1);
                         setPrevPoke(prevData);
@@ -61,7 +61,7 @@ const PokemonDetail = () => {
 
     const { name, height, weight, types, abilities, sprite, stats } = data;
 
-    // ✅ Stats aus der API extrahieren
+    //  Stats
     const getStatDetails = (statName) => {
         switch (statName) {
             case "attack":
@@ -98,7 +98,7 @@ const PokemonDetail = () => {
                 Welcome to Pokémon Battle!
             </h1>
 
-            {/* Beschreibung */}
+            {/* Description */}
             <p className="text-lg text-black dark:text-white mt-2 mb-6 tracking-wide">
                 Pick{" "}
                 <span className="text-pokemon-accent font-bold capitalize">
@@ -109,7 +109,7 @@ const PokemonDetail = () => {
             </p>
 
             <div className="max-w-lg w-full bg-pokemon-cardLight dark:bg-pokemon-cardDark shadow-lg rounded-xl p-6 border border-gray-300 dark:border-gray-700">
-                {/* Pokémon Bild */}
+                {/* Pokémon image */}
                 <div className="flex justify-center">
                     <img
                         src={sprite}
@@ -123,7 +123,7 @@ const PokemonDetail = () => {
                     {name}
                 </h2>
 
-                {/* Grundlegende Infos */}
+                {/* Bascis Infos */}
                 <div className="mt-4 space-y-2 text-center">
                     <p>
                         <span className="font-semibold">Height:</span> {height}{" "}
@@ -184,9 +184,18 @@ const PokemonDetail = () => {
                     <button
                         className="py-2 px-4 btn-custom"
                         onClick={() => {
-                            localStorage.setItem(name, JSON.stringify(data));
-                            alert(`${name} added to your roster!`);
-                            navigate("/my-roster");
+                            const existingPokemon = localStorage.getItem(name);
+
+                            if (existingPokemon) {
+                                alert(`${name} is already in your roster!`);
+                            } else {
+                                localStorage.setItem(
+                                    name,
+                                    JSON.stringify(data)
+                                );
+                                alert(`${name} added to your roster!`);
+                                navigate("/my-roster");
+                            }
                         }}>
                         <Plus />
                     </button>
