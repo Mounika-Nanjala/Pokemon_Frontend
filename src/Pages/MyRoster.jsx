@@ -54,15 +54,15 @@ const MyRoster = () => {
 
   const handleSelect = (pokemon) => {
     try {
-      const lastNumber = getLastBattlefieldKey();
-      const nextKey = `battlefield${lastNumber + 1}`;
-      localStorage.setItem(nextKey, JSON.stringify(pokemon));
+     
+      localStorage.setItem("selectedPokemon", JSON.stringify(pokemon));
       navigate("/battle");
     } catch (error) {
       console.error(error);
-      alert("Error by selecting a pokemon.");
+      alert("Error selecting the Pokémon.");
     }
   };
+  
 
   return (
     <div className="text-white">
