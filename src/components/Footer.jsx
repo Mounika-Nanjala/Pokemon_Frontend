@@ -1,6 +1,6 @@
 const Footer = () => {
     return (
-        <footer className="bg-gray-800 text-white text-center p-4 mt-8">
+        <footer className="bg-pokemon-navbarLight dark:bg-pokemon-navbarDark text-black dark:text-white text-center p-8 border-t border-gray-300 dark:border-gray-700">
             <p>
                 © {new Date().getFullYear()} Pokémon Battle Game. All rights
                 reserved.
@@ -8,4 +8,5 @@ const Footer = () => {
         </footer>
     );
 };
+
 export default Footer;
