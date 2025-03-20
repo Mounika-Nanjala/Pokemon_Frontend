@@ -70,70 +70,70 @@ const BattlePage = () => {
     };
 
     const handleAttack = (move) => {
-        if (!playerTurn || !playerPokemon || !enemyPokemon) return;
-
-        let log = [...battleLog];
-
-        const damageToEnemy = getRandomDamage(move);
-        let newEnemyHp = Math.max(0, enemyPokemon.hp - damageToEnemy);
-
-        log.push({
-            text: `🔥 ${playerPokemon.name} used ${move.name}, dealing ${damageToEnemy} damage!`,
-            type: "player",
-        });
-
-        if (newEnemyHp <= 0) {
-            log.push({
-                text: `💀 ${enemyPokemon.name} has fainted!`,
-                type: "player",
-            });
-            setResult("You won! 🎉");
-            setEnemyPokemon((prev) => ({ ...prev, hp: 0 }));
-
-            // 🛠️ Score in Local Storage speichern
-            localStorage.setItem("latestScore", JSON.stringify({ score: 100 }));
-        } else {
-            setEnemyPokemon((prev) => ({ ...prev, hp: newEnemyHp }));
-            setBattleLog(log);
-            setPlayerTurn(false);
-            setTimeout(() => enemyAttack(log), 1000);
-        }
-    };
-
-    const enemyAttack = (log) => {
-        if (!playerPokemon || !enemyPokemon) return;
-
-        const enemyMove =
-            enemyPokemon.moves[
-                Math.floor(Math.random() * enemyPokemon.moves.length)
-            ];
-        const damageToPlayer = getRandomDamage(enemyMove);
-        let newPlayerHp = Math.max(0, playerPokemon.hp - damageToPlayer);
-
-        log.push({
-            text: `💥 ${enemyPokemon.name} used ${enemyMove.name}, dealing ${damageToPlayer} damage!`,
-            type: "enemy",
-        });
-
-        if (newPlayerHp <= 0) {
-            log.push({
-                text: `💀 ${playerPokemon.name} has fainted!`,
-                type: "enemy",
-            });
-            setResult("You lost! 😢");
-            setPlayerPokemon((prev) => ({ ...prev, hp: 0 }));
-        } else {
-            setPlayerPokemon((prev) => ({ ...prev, hp: newPlayerHp }));
-            setBattleLog(log);
-            setPlayerTurn(true);
-        }
-
-        // Check for a tie
-        if (newPlayerHp <= 0 && enemyPokemon.hp <= 0) {
-            setResult("It's a tie! 🤝");
-        }
-    };
-
+      if (!playerTurn || !playerPokemon || !enemyPokemon) return;
+  
+      let log = [...battleLog];
+  
+      const damageToEnemy = getRandomDamage(move);
+      let newEnemyHp = Math.max(0, enemyPokemon.hp - damageToEnemy);
+  
+      log.push({
+          text: `🔥 ${playerPokemon.name} used ${move.name}, dealing ${damageToEnemy} damage!`,
+          type: "player",
+      });
+  
+      if (newEnemyHp <= 0) {
+          log.push({
+              text: `💀 ${enemyPokemon.name} has fainted!`,
+              type: "player",
+          });
+          setResult("You won! 🎉");
+          setEnemyPokemon((prev) => ({ ...prev, hp: 0 }));
+  
+          // 🛠️ Score based on total damage dealt (randomized factor)
+          const finalScore = Math.floor(Math.random() * 50) + damageToEnemy * 2;
+          localStorage.setItem("latestScore", JSON.stringify({ score: finalScore }));
+      } else {
+          setEnemyPokemon((prev) => ({ ...prev, hp: newEnemyHp }));
+          setBattleLog(log);
+          setPlayerTurn(false);
+          setTimeout(() => enemyAttack(log), 1000);
+      }
+  };
+  
+  const enemyAttack = (log) => {
+      if (!playerPokemon || !enemyPokemon) return;
+  
+      const enemyMove = enemyPokemon.moves[Math.floor(Math.random() * enemyPokemon.moves.length)];
+      const damageToPlayer = getRandomDamage(enemyMove);
+      let newPlayerHp = Math.max(0, playerPokemon.hp - damageToPlayer);
+  
+      log.push({
+          text: `💥 ${enemyPokemon.name} used ${enemyMove.name}, dealing ${damageToPlayer} damage!`,
+          type: "enemy",
+      });
+  
+      if (newPlayerHp <= 0) {
+          log.push({
+              text: `💀 ${playerPokemon.name} has fainted!`,
+              type: "enemy",
+          });
+          setResult("You lost! 😢");
+          setPlayerPokemon((prev) => ({ ...prev, hp: 0 }));
+  
+          // No score saving when the player loses
+      } else {
+          setPlayerPokemon((prev) => ({ ...prev, hp: newPlayerHp }));
+          setBattleLog(log);
+          setPlayerTurn(true);
+      }
+  
+      // Check for a tie
+      if (newPlayerHp <= 0 && enemyPokemon.hp <= 0) {
+          setResult("It's a tie! 🤝");
+      }
+  };
+  
     const handleGoToMyRoster = () => {
         navigate("/my-roster");
     };
