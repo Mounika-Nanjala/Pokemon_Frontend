@@ -19,6 +19,7 @@ const MyRoster = () => {
             if (
                 item &&
                 !key.includes("battlefield") &&
+                !key.includes("selectedPokemon") &&
                 item.startsWith("{") &&
                 item.endsWith("}")
             ) {
