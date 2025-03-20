@@ -24,21 +24,22 @@ const Leaderboard = () => {
     useEffect(() => {
         const savedScore = JSON.parse(localStorage.getItem("latestScore"));
         if (savedScore) {
-            setScore(savedScore.score); // Score automatisch im Input setzen
+            setScore(savedScore.score);
         }
     }, []);
+
+    const [successMessage, setSuccessMessage] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorMessage("");
+        setSuccessMessage("");
 
         const scoreToSubmit = parseInt(score, 10);
         if (isNaN(scoreToSubmit)) {
             setErrorMessage("Invalid score value.");
             return;
         }
-
-        console.log("Submitting:", { username, score: scoreToSubmit });
 
         try {
             const res = await fetch("http://localhost:5000", {
@@ -52,6 +53,12 @@ const Leaderboard = () => {
             if (!res.ok) {
                 throw new Error(data.message || "Failed to submit score");
             }
+
+            setSuccessMessage(
+                data.updatedScore
+                    ? `🎉 Score updated! New score: ${data.updatedScore}`
+                    : `🎉 New player added!`
+            );
 
             setUsername("");
             setScore("");
@@ -68,7 +75,7 @@ const Leaderboard = () => {
                 🏆 Leaderboard
             </h1>
 
-            {/* Fehleranzeige */}
+            {/* Error message */}
             {errorMessage && (
                 <p className="text-red-500 text-center">{errorMessage}</p>
             )}
@@ -111,7 +118,7 @@ const Leaderboard = () => {
                 </table>
             </div>
 
-            {/* Form zum Eintragen des Scores */}
+            {/* Form to add score */}
             <form
                 onSubmit={handleSubmit}
                 className="mt-6 p-4 border border-gray-700 rounded-lg shadow-lg">
@@ -140,6 +147,12 @@ const Leaderboard = () => {
                     </button>
                 </div>
             </form>
+            {/* Sucess Message */}
+            {successMessage && (
+                <p className="text-green-500 text-center pt-10">
+                    {successMessage}
+                </p>
+            )}
         </div>
     );
 };
