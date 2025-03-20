@@ -4,11 +4,13 @@ const Leaderboard = () => {
     const [leaderboard, setLeaderboard] = useState([]);
     const [username, setUsername] = useState("");
     const [score, setScore] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
     // Fetch leaderboard
     const fetchLeaderboard = async () => {
         try {
             const res = await fetch("http://localhost:5000");
+            if (!res.ok) throw new Error("Failed to fetch leaderboard.");
             setLeaderboard(await res.json());
         } catch (error) {
             console.error("Error fetching leaderboard:", error);
@@ -19,35 +21,61 @@ const Leaderboard = () => {
         fetchLeaderboard();
     }, []);
 
+    useEffect(() => {
+        const savedScore = JSON.parse(localStorage.getItem("latestScore"));
+        if (savedScore) {
+            setScore(savedScore.score); // Score automatisch im Input setzen
+        }
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setErrorMessage("");
+
+        const scoreToSubmit = parseInt(score, 10);
+        if (isNaN(scoreToSubmit)) {
+            setErrorMessage("Invalid score value.");
+            return;
+        }
+
+        console.log("Submitting:", { username, score: scoreToSubmit });
 
         try {
             const res = await fetch("http://localhost:5000", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, score: parseInt(score, 10) }),
+                body: JSON.stringify({ username, score: scoreToSubmit }),
             });
 
-            if (!res.ok) throw new Error("Failed to submit score");
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.message || "Failed to submit score");
+            }
 
             setUsername("");
             setScore("");
+            localStorage.removeItem("latestScore");
             await fetchLeaderboard();
         } catch (error) {
-            console.error("Error submitting score:", error);
+            setErrorMessage(error.message);
         }
     };
 
     return (
-        <div className="max-w-3xl mx-auto p-6 bg-pokemon-cardLight dark:bg-pokemon-cardDark ">
+        <div className="max-w-3xl mx-auto p-6 bg-pokemon-cardLight dark:bg-pokemon-cardDark">
             <h1 className="text-3xl font-bold text-center mb-6 text-pokemon-accent">
                 🏆 Leaderboard
             </h1>
 
-            {/* Leaderboard table */}
-            <div className="overflow-x-auto  border border-gray-700 shadow-lg rounded-lg text-white">
-                <table className="w-full border-collapse  overflow-hidden">
+            {/* Fehleranzeige */}
+            {errorMessage && (
+                <p className="text-red-500 text-center">{errorMessage}</p>
+            )}
+
+            {/* Leaderboard Table */}
+            <div className="overflow-x-auto border border-gray-700 shadow-lg rounded-lg text-white">
+                <table className="w-full border-collapse overflow-hidden">
                     <thead>
                         <tr className="text-lg bg-pokemon-darkBg">
                             <th className="p-3">🏅 Rank</th>
@@ -83,7 +111,7 @@ const Leaderboard = () => {
                 </table>
             </div>
 
-            {/* Form to submit score */}
+            {/* Form zum Eintragen des Scores */}
             <form
                 onSubmit={handleSubmit}
                 className="mt-6 p-4 border border-gray-700 rounded-lg shadow-lg">

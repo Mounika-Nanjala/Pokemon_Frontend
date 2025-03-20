@@ -89,6 +89,9 @@ const BattlePage = () => {
             });
             setResult("You won! 🎉");
             setEnemyPokemon((prev) => ({ ...prev, hp: 0 }));
+
+            // 🛠️ Score in Local Storage speichern
+            localStorage.setItem("latestScore", JSON.stringify({ score: 100 }));
         } else {
             setEnemyPokemon((prev) => ({ ...prev, hp: newEnemyHp }));
             setBattleLog(log);
